@@ -18,6 +18,7 @@ import com.android.volley.toolbox.Volley;
 
 import org.json.JSONArray;
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 
@@ -73,11 +74,11 @@ public class SearchableActivity extends Activity implements ListView.OnItemClick
                 for(int i = 0; i < response.length(); i++) {
                     try {
                         results.add(Cleaner.cleanKronoxResponse(response.get(i).toString()));
-                        //adapter.notifyDataSetChanged();
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
                 }
+                adapter.notifyDataSetChanged();
             }
         }, new Response.ErrorListener() {
             @Override
