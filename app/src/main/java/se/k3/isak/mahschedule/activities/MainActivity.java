@@ -1,4 +1,4 @@
-package se.k3.isak.mahschedule;
+package se.k3.isak.mahschedule.activities;
 
 import android.app.SearchManager;
 import android.content.ComponentName;
@@ -14,6 +14,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import se.k3.isak.mahschedule.R;
 import se.k3.isak.mahschedule.fragments.MainFragment;
 import se.k3.isak.mahschedule.helpers.FragmentHelper;
 import se.k3.isak.mahschedule.navigation_drawer.NavDrawer;
@@ -43,7 +44,7 @@ public class MainActivity extends ActionBarActivity {
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
-        menu.findItem(R.id.search).setVisible(!navDrawer.isDrawerOpened);
+        menu.findItem(R.id.search).setVisible(fragmentHelper.isFragmentVisible("settings"));
         return super.onPrepareOptionsMenu(menu);
     }
 
@@ -53,16 +54,18 @@ public class MainActivity extends ActionBarActivity {
 
         MenuItem searchItem = menu.findItem(R.id.search);
         SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
-        SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+        searchView.setIconifiedByDefault(false);
+        //searchView.requestFocus();
 
+        SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
         searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
-        Log.i(MainActivity.TAG, getComponentName().toString());
 
         return true;
     }
 
     @Override
     public void onBackPressed() {
+        invalidateOptionsMenu();
         if(navDrawer.isDrawerOpened) {
             navDrawer.closeDrawer();
         } else {

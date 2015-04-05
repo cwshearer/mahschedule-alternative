@@ -10,7 +10,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
-import se.k3.isak.mahschedule.fragments.SettingsFragment;
+import se.k3.isak.mahschedule.fragments.ScheduleSettings;
 import se.k3.isak.mahschedule.helpers.FragmentHelper;
 import se.k3.isak.mahschedule.R;
 
@@ -36,13 +36,13 @@ public class NavDrawer implements ListView.OnItemClickListener {
        this.toolbar = toolbar;
 
        drawerItems = new String[1];
-       drawerItems[0] = activity.getResources().getString(R.string.action_settings);
+       drawerItems[0] = activity.getResources().getString(R.string.settings);
        drawerLayout = (DrawerLayout) activity.findViewById(R.id.drawer_layout);
        drawerList = (ListView) activity.findViewById(R.id.drawer_list);
        drawerList.setAdapter(new ArrayAdapter<String>(activity, R.layout.drawer_list_item, drawerItems));
        drawerList.setOnItemClickListener(this);
 
-       drawerToggle = (new ActionBarDrawerToggle(activity, drawerLayout, this.toolbar, R.string.drawer, R.string.drawer) {
+       drawerToggle = (new ActionBarDrawerToggle(activity, drawerLayout, this.toolbar, R.string.drawer_opened, R.string.drawer_closed) {
             @Override
             public void onDrawerOpened(View drawerView) {
                 super.onDrawerOpened(drawerView);
@@ -73,7 +73,7 @@ public class NavDrawer implements ListView.OnItemClickListener {
 
         if(!fragmentHelper.isFragmentVisible(fragmentName)) {
             if(fragmentName.equals("settings")) {
-                fragmentHelper.addFragment(new SettingsFragment(), fragmentName, true);
+                fragmentHelper.addFragment(new ScheduleSettings(), fragmentName, true);
             }
         }
 

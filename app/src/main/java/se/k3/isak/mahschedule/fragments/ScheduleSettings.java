@@ -20,8 +20,7 @@ import se.k3.isak.mahschedule.R;
 /**
  * Created by isak on 2015-04-04.
  */
-public class SettingsFragment extends Fragment {
-
+public class ScheduleSettings extends Fragment {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
