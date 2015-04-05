@@ -1,4 +1,4 @@
-package se.k3.isak.mahschedule.NavigationDrawer;
+package se.k3.isak.mahschedule.navigation_drawer;
 
 import android.app.Activity;
 import android.support.v4.widget.DrawerLayout;
@@ -10,8 +10,8 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
-import se.k3.isak.mahschedule.Fragments.SettingsFragment;
-import se.k3.isak.mahschedule.Helpers.FragmentHelper;
+import se.k3.isak.mahschedule.fragments.SettingsFragment;
+import se.k3.isak.mahschedule.helpers.FragmentHelper;
 import se.k3.isak.mahschedule.R;
 
 /**

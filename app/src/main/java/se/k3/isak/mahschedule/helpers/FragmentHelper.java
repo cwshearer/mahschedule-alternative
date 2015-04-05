@@ -1,4 +1,4 @@
-package se.k3.isak.mahschedule.Helpers;
+package se.k3.isak.mahschedule.helpers;
 
 import android.app.Activity;
 import android.app.Fragment;
@@ -6,6 +6,7 @@ import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.util.Log;
 
+import se.k3.isak.mahschedule.MainActivity;
 import se.k3.isak.mahschedule.R;
 
 /**
@@ -42,7 +43,7 @@ public class FragmentHelper {
     public boolean isFragmentVisible(String tag) {
         Fragment test = fragmentManager.findFragmentByTag(tag);
         if(test != null && test.isVisible()) {
-            Log.i("isak", "fragment exists");
+            Log.i(MainActivity.TAG, "fragment exists");
             return true;
         }
         return false;
