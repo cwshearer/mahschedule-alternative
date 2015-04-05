@@ -3,9 +3,15 @@
     <string name="search_label">Searchable</string>
     <string name="app_name">Mah Schedule</string>
 
-    <string name="settings">Settings</string>
+
+    <!-- Drawer-->
     <string name="drawer_opened">Drawer opened</string>
     <string name="drawer_closed">Drawer closed</string>
+
+    <!-- In this order-->
+    <string name="manage_schedules">Manage schedules</string>
+    <string name="settings">Settings</string>
+
     <string name="search_hint">Add new schedule</string>
 
 </resources>

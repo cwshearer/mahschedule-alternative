@@ -44,7 +44,7 @@ public class MainActivity extends ActionBarActivity {
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
-        menu.findItem(R.id.search).setVisible(fragmentHelper.isFragmentVisible("settings"));
+        menu.findItem(R.id.search).setVisible(fragmentHelper.isFragmentVisible("Manage schedules"));
         return super.onPrepareOptionsMenu(menu);
     }
 

@@ -11,6 +11,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import se.k3.isak.mahschedule.fragments.ScheduleSettings;
+import se.k3.isak.mahschedule.fragments.SettingsFragment;
 import se.k3.isak.mahschedule.helpers.FragmentHelper;
 import se.k3.isak.mahschedule.R;
 
@@ -35,8 +36,10 @@ public class NavDrawer implements ListView.OnItemClickListener {
        this.fragmentHelper = fragmentHelper;
        this.toolbar = toolbar;
 
-       drawerItems = new String[1];
-       drawerItems[0] = activity.getResources().getString(R.string.settings);
+       drawerItems = new String[2];
+       drawerItems[0] = activity.getResources().getString(R.string.manage_schedules);
+       drawerItems[1] = activity.getResources().getString(R.string.settings);
+
        drawerLayout = (DrawerLayout) activity.findViewById(R.id.drawer_layout);
        drawerList = (ListView) activity.findViewById(R.id.drawer_list);
        drawerList.setAdapter(new ArrayAdapter<String>(activity, R.layout.drawer_list_item, drawerItems));
@@ -69,11 +72,14 @@ public class NavDrawer implements ListView.OnItemClickListener {
     }
 
     private void selectItem(int position) {
-        String fragmentName = drawerItems[position].toLowerCase();
+        String tag = drawerItems[position];
 
-        if(!fragmentHelper.isFragmentVisible(fragmentName)) {
-            if(fragmentName.equals("settings")) {
-                fragmentHelper.addFragment(new ScheduleSettings(), fragmentName, true);
+        if(!fragmentHelper.isFragmentVisible(tag)) {
+            if(position == 0) {
+                fragmentHelper.addFragment(new ScheduleSettings(), tag, true);
+            }
+            if(position == 1) {
+                fragmentHelper.addFragment(new SettingsFragment(), tag, true);
             }
         }
 

@@ -30,26 +30,7 @@ public class ScheduleSettings extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_settings, container, false);
-
-        final TextView result = (TextView) v.findViewById(R.id.result);
-
-        RequestQueue requestQueue = Volley.newRequestQueue(getActivity());
-        String url = "http://kronox.mah.se/ajax/ajax_autocompleteResurser.jsp?typ=program&term=interaktionsdesign";
-
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
-                result.setText(response);
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                result.setText("whoops!");
-            }
-        });
-
-        requestQueue.add(stringRequest);
+        View v = inflater.inflate(R.layout.fragment_schedule_settings, container, false);
 
         return v;
     }
