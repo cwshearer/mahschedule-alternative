@@ -57,7 +57,7 @@ public class SearchableActivity extends Activity implements ListView.OnItemClick
     }
 
     void handleIntent(Intent intent) {
-        Log.i(MainActivity.TAG, "handle intent");
+        Log.i(MainActivity.TAG, "handle search intent");
         if(Intent.ACTION_SEARCH.equals(intent.getAction())) {
             String query = intent.getStringExtra(SearchManager.QUERY);
             getFromKronoxAndShow(query);

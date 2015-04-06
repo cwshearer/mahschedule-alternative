@@ -18,7 +18,7 @@ public class Cleaner {
         int end2 = s.indexOf("<\\/font");
 
         if(start1 == -1 || end1 == -1 || start2 == -1 || end2 == -1) {
-            Log.i(MainActivity.TAG, "cleanKronoxResponse fuckar ur");
+            Log.i(MainActivity.TAG, "invalid schedule item from kronox");
             return null;
         }
 

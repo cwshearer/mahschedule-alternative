@@ -5,11 +5,13 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+import se.k3.isak.mahschedule.activities.MainActivity;
 import se.k3.isak.mahschedule.fragments.ScheduleSettings;
 import se.k3.isak.mahschedule.fragments.SettingsFragment;
 import se.k3.isak.mahschedule.helpers.FragmentHelper;
@@ -64,6 +66,13 @@ public class NavDrawer implements ListView.OnItemClickListener {
         drawerLayout.setDrawerListener(drawerToggle);
         ((ActionBarActivity)activity).getSupportActionBar().setHomeButtonEnabled(true);
         drawerToggle.syncState();
+
+        drawerToggle.setToolbarNavigationClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                activity.onBackPressed();
+            }
+        });
     }
 
     @Override
@@ -81,6 +90,7 @@ public class NavDrawer implements ListView.OnItemClickListener {
             if(position == 1) {
                 fragmentHelper.addFragment(new SettingsFragment(), tag, true);
             }
+            Log.i(MainActivity.TAG, "new fragment");
         }
 
         // drawerList.setItemChecked(position, true); implement later with Selector, but don't forget Ripple!

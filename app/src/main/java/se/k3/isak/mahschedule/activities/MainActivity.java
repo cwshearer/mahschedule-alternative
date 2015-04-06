@@ -1,5 +1,6 @@
 package se.k3.isak.mahschedule.activities;
 
+import android.app.FragmentManager;
 import android.app.SearchManager;
 import android.content.ComponentName;
 import android.content.Context;
@@ -13,13 +14,14 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 
 import se.k3.isak.mahschedule.R;
 import se.k3.isak.mahschedule.fragments.MainFragment;
 import se.k3.isak.mahschedule.helpers.FragmentHelper;
 import se.k3.isak.mahschedule.navigation_drawer.NavDrawer;
 
-public class MainActivity extends ActionBarActivity {
+public class MainActivity extends ActionBarActivity implements FragmentManager.OnBackStackChangedListener {
 
     public static final String TAG = "isak";
 
@@ -33,13 +35,22 @@ public class MainActivity extends ActionBarActivity {
         setContentView(R.layout.activity_main);
 
         fragmentHelper = new FragmentHelper(this);
+        fragmentHelper.getFragmentManager().addOnBackStackChangedListener(this);
+
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         navDrawer = new NavDrawer(this, fragmentHelper, toolbar);
+
         if(savedInstanceState == null) {
             fragmentHelper.addFragment(new MainFragment(), "main", false);
         }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        Log.i(MainActivity.TAG, "onOptionsItemSelected");
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -55,7 +66,6 @@ public class MainActivity extends ActionBarActivity {
         MenuItem searchItem = menu.findItem(R.id.search);
         SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
         searchView.setIconifiedByDefault(false);
-        //searchView.requestFocus();
 
         SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
         searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
@@ -87,5 +97,12 @@ public class MainActivity extends ActionBarActivity {
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
         navDrawer.getDrawerToggle().onConfigurationChanged(newConfig);
+    }
+
+    @Override
+    public void onBackStackChanged() {
+        navDrawer.getDrawerToggle().setDrawerIndicatorEnabled(fragmentHelper.getFragmentManager().getBackStackEntryCount() == 0);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(fragmentHelper.getFragmentManager().getBackStackEntryCount() > 0);
+        navDrawer.getDrawerToggle().syncState();
     }
 }

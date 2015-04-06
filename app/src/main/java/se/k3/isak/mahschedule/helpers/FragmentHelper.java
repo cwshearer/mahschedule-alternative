@@ -45,4 +45,8 @@ public class FragmentHelper {
         }
         return false;
     }
+
+    public FragmentManager getFragmentManager() {
+        return this.fragmentManager;
+    }
 }
