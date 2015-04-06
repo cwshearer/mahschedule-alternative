@@ -6,10 +6,12 @@
     <!-- Drawer-->
     <string name="drawer_opened">Drawer opened</string>
     <string name="drawer_closed">Drawer closed</string>
+
     <!-- Drawer items, in this order-->
     <string name="manage_schedules">Manage schedules</string>
     <string name="settings">Settings</string>
 
+    <string name="main_fragment">Home</string>
     <string name="search_hint">Add new schedule</string>
 
 </resources>

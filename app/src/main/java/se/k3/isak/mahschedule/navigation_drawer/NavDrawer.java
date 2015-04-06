@@ -36,7 +36,7 @@ public class NavDrawer implements ListView.OnItemClickListener {
 
     public boolean isDrawerOpened = false;
 
-    public NavDrawer(final Activity activity, FragmentHelper fragmentHelper, Toolbar toolbar) {
+    public NavDrawer(final Activity activity, FragmentHelper fragmentHelper, final Toolbar toolbar) {
        this.activity = activity;
        this.fragmentHelper = fragmentHelper;
        this.toolbar = toolbar;
@@ -104,10 +104,6 @@ public class NavDrawer implements ListView.OnItemClickListener {
 
     public void closeDrawer() {
         drawerLayout.closeDrawer(drawerList);
-    }
-
-    public void openDrawer() {
-        drawerLayout.openDrawer(drawerList);
     }
 
     public ActionBarDrawerToggle getDrawerToggle() {

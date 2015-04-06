@@ -72,7 +72,6 @@ public class MainActivity extends ActionBarActivity implements FragmentManager.O
 
         MenuItem searchItem = menu.findItem(R.id.search);
         SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
-        searchView.setIconifiedByDefault(false);
 
         SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
         searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
@@ -111,6 +110,6 @@ public class MainActivity extends ActionBarActivity implements FragmentManager.O
     public void onBackStackChanged() {
         navDrawer.getDrawerToggle().setDrawerIndicatorEnabled(fragmentHelper.getFragmentManager().getBackStackEntryCount() == 0);
         navDrawer.getDrawerToggle().syncState();
-        Log.i(MainActivity.TAG, "onBackStackChanged");
+        //Log.i(MainActivity.TAG, "onBackStackChanged");
     }
 }
