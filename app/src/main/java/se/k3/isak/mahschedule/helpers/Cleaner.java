@@ -7,6 +7,7 @@ import se.k3.isak.mahschedule.activities.MainActivity;
 /**
  * Created by isak on 2015-04-05.
  */
+
 public class Cleaner {
 
     public static String cleanKronoxResponse(String s) {
@@ -24,7 +25,7 @@ public class Cleaner {
         String part1 = s.substring(start1 + 3, end1);
         String part2 = s.substring(start2 + 3, end2);
 
-        return part2 + ", " + part1;
+        return part2 + ",\n" + part1;
     }
 
 }
