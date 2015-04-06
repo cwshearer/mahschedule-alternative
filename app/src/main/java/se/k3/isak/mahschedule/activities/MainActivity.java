@@ -49,7 +49,14 @@ public class MainActivity extends ActionBarActivity implements FragmentManager.O
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        Log.i(MainActivity.TAG, "onOptionsItemSelected");
+        if(navDrawer.getDrawerToggle().onOptionsItemSelected(item)) {
+            return true;
+        }
+
+        if(fragmentHelper.getFragmentManager().getBackStackEntryCount() != 0) {
+            onBackPressed();
+        }
+
         return super.onOptionsItemSelected(item);
     }
 
@@ -75,16 +82,17 @@ public class MainActivity extends ActionBarActivity implements FragmentManager.O
 
     @Override
     public void onBackPressed() {
-        invalidateOptionsMenu();
         if(navDrawer.isDrawerOpened) {
             navDrawer.closeDrawer();
         } else {
             if (getFragmentManager().getBackStackEntryCount() > 0 ){
                 getFragmentManager().popBackStack();
+                navDrawer.animStart();
             } else {
                 super.onBackPressed();
             }
         }
+        invalidateOptionsMenu();
     }
 
     @Override
@@ -102,7 +110,7 @@ public class MainActivity extends ActionBarActivity implements FragmentManager.O
     @Override
     public void onBackStackChanged() {
         navDrawer.getDrawerToggle().setDrawerIndicatorEnabled(fragmentHelper.getFragmentManager().getBackStackEntryCount() == 0);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(fragmentHelper.getFragmentManager().getBackStackEntryCount() > 0);
         navDrawer.getDrawerToggle().syncState();
+        Log.i(MainActivity.TAG, "onBackStackChanged");
     }
 }
