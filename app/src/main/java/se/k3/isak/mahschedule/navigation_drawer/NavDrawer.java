@@ -25,43 +25,49 @@ public class NavDrawer implements ListView.OnItemClickListener {
     Activity mActivity;
     FragmentHelper mFragmentHelper;
     String[] mDrawerItems;
+    DrawerOpenListener mDrawerOpenListener;
+
     ValueAnimator mAnim;
     ActionBar mActionBar;
+    ListView mDrawerList;
+    DrawerLayout mDrawerLayout;
 
-    public ListView drawerList;
-    public DrawerLayout drawerLayout;
     public ActionBarDrawerToggle drawerToggle;
 
     public NavDrawer(Builder builder) {
         this.mActivity = builder.mActivity;
         this.mFragmentHelper =  builder.mFragmentHelper;
         this.mDrawerItems = builder.mDrawerItems;
+        this.mDrawerOpenListener = builder.mDrawerOpenListener;
+
         mActionBar = ((ActionBarActivity)mActivity).getSupportActionBar();
         setupDrawerToggle();
         setupAnim();
     }
 
     private void setupDrawerToggle() {
-        drawerLayout = (DrawerLayout) mActivity.findViewById(R.id.drawer_layout);
-        drawerList = (ListView) mActivity.findViewById(R.id.drawer_list);
-        drawerList.setAdapter(new ArrayAdapter<String>(mActivity, R.layout.drawer_list_item, mDrawerItems));
-        drawerList.setOnItemClickListener(this);
+        mDrawerLayout = (DrawerLayout) mActivity.findViewById(R.id.drawer_layout);
+        mDrawerList = (ListView) mActivity.findViewById(R.id.drawer_list);
+        mDrawerList.setAdapter(new ArrayAdapter<String>(mActivity, R.layout.drawer_list_item, mDrawerItems));
+        mDrawerList.setOnItemClickListener(this);
 
-        drawerToggle = (new ActionBarDrawerToggle(mActivity, drawerLayout, R.string.drawer_opened, R.string.drawer_closed) {
+        drawerToggle = (new ActionBarDrawerToggle(mActivity, mDrawerLayout, R.string.drawer_opened, R.string.drawer_closed) {
             @Override
             public void onDrawerOpened(View drawerView) {
                 super.onDrawerOpened(drawerView);
+                mDrawerOpenListener.isDrawerOpened(true);
                 mActivity.invalidateOptionsMenu();
             }
 
             @Override
             public void onDrawerClosed(View drawerView) {
                 super.onDrawerClosed(drawerView);
+                mDrawerOpenListener.isDrawerOpened(false);
                 mActivity.invalidateOptionsMenu();
             }
         });
 
-        drawerLayout.setDrawerListener(drawerToggle);
+        mDrawerLayout.setDrawerListener(drawerToggle);
         mActionBar.setDisplayHomeAsUpEnabled(true);
         mActionBar.setHomeButtonEnabled(true);
         drawerToggle.syncState();
@@ -73,7 +79,7 @@ public class NavDrawer implements ListView.OnItemClickListener {
             @Override
             public void onAnimationUpdate(ValueAnimator valueAnimator) {
                 float slideOffset = (Float) valueAnimator.getAnimatedValue();
-                drawerToggle.onDrawerSlide(drawerLayout, slideOffset);
+                drawerToggle.onDrawerSlide(mDrawerLayout, slideOffset);
             }
         });
         mAnim.setInterpolator(new DecelerateInterpolator());
@@ -99,7 +105,7 @@ public class NavDrawer implements ListView.OnItemClickListener {
     }
 
     public void closeDrawer() {
-        drawerLayout.closeDrawer(drawerList);
+        mDrawerLayout.closeDrawer(mDrawerList);
     }
 
     public void animStart() {
@@ -110,11 +116,14 @@ public class NavDrawer implements ListView.OnItemClickListener {
 
         private final Activity mActivity;
         private final FragmentHelper mFragmentHelper;
+        private final DrawerOpenListener mDrawerOpenListener;
+
         private String[] mDrawerItems;
 
-        public Builder(Activity mActivity, FragmentHelper mFragmentHelper) {
+        public Builder(Activity mActivity, FragmentHelper mFragmentHelper, DrawerOpenListener mDrawerOpenListener) {
             this.mActivity = mActivity;
             this.mFragmentHelper = mFragmentHelper;
+            this.mDrawerOpenListener = mDrawerOpenListener;
         }
 
         public Builder drawerItems(String[] mDrawerItems) {

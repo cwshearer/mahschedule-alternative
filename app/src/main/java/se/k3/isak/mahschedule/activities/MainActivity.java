@@ -6,38 +6,37 @@ import android.content.Context;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.PersistableBundle;
-import android.support.annotation.NonNull;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
-import android.util.AttributeSet;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 
 import se.k3.isak.mahschedule.R;
 import se.k3.isak.mahschedule.fragments.MainFragment;
 import se.k3.isak.mahschedule.helpers.FragmentHelper;
+import se.k3.isak.mahschedule.navigation_drawer.DrawerOpenListener;
 import se.k3.isak.mahschedule.navigation_drawer.NavDrawer;
 
-public class MainActivity extends ActionBarActivity implements FragmentManager.OnBackStackChangedListener {
+public class MainActivity extends ActionBarActivity implements FragmentManager.OnBackStackChangedListener, DrawerOpenListener {
 
     public static final String TAG = "ISAK";
 
     String mMainFragmentTag;
     FragmentHelper mFragmentHelper;
     NavDrawer navDrawer;
-    Toolbar toolbar;
+    Toolbar mToolbar;
     String[] mDrawerTitles;
+    boolean mIsDrawerOpen;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+        mToolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(mToolbar);
 
         mMainFragmentTag = getResources().getString(R.string.main_fragment);
         setTitle(mMainFragmentTag);
@@ -46,7 +45,7 @@ public class MainActivity extends ActionBarActivity implements FragmentManager.O
         mFragmentHelper.fragmentManager.addOnBackStackChangedListener(this);
 
         mDrawerTitles = getResources().getStringArray(R.array.drawer_items);
-        navDrawer = new NavDrawer.Builder(this, mFragmentHelper)
+        navDrawer = new NavDrawer.Builder(this, mFragmentHelper, this)
                 .drawerItems(mDrawerTitles).build();
 
         if(savedInstanceState == null) {
@@ -84,10 +83,10 @@ public class MainActivity extends ActionBarActivity implements FragmentManager.O
 
     @Override
     public void onBackPressed() {
-        if(navDrawer.drawerLayout.isDrawerOpen(navDrawer.drawerList)) {
+        if(mIsDrawerOpen) {
             navDrawer.closeDrawer();
         } else {
-            if (getFragmentManager().getBackStackEntryCount() > 0 ){
+            if (getFragmentManager().getBackStackEntryCount() > 0) {
                 getFragmentManager().popBackStack();
                 navDrawer.animStart();
             } else {
@@ -111,10 +110,18 @@ public class MainActivity extends ActionBarActivity implements FragmentManager.O
 
     @Override
     public void onBackStackChanged() {
-        navDrawer.drawerToggle.setDrawerIndicatorEnabled(mFragmentHelper.fragmentManager.getBackStackEntryCount() == 0);
+        boolean backStackEntryCountNil = (mFragmentHelper.fragmentManager.getBackStackEntryCount() == 0);
+        navDrawer.drawerToggle.setDrawerIndicatorEnabled(backStackEntryCountNil);
         navDrawer.drawerToggle.syncState();
-        Log.i(MainActivity.TAG, "onBackStackChanged");
+        if(backStackEntryCountNil) {
+            updateTitle();
+        }
+    }
+
+    @Override
+    public boolean isDrawerOpened(boolean isOpen) {
         updateTitle();
+        return mIsDrawerOpen = isOpen;
     }
 
     void updateTitle() {
