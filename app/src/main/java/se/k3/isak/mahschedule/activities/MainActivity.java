@@ -50,10 +50,10 @@ public class MainActivity extends ActionBarActivity implements FragmentManager.O
 
         if(savedInstanceState == null) {
             mFragmentHelper.addFragment(new MainFragment(), mMainFragmentTag, false);
+            handleIntent(getIntent());
+        } else {
+            setTitle(savedInstanceState.getCharSequence("title"));
         }
-
-        handleIntent(getIntent());
-        //Log.i(MainActivity.TAG, "MainActivity onCreate");
     }
 
     void setupNavDrawer() {
@@ -86,13 +86,13 @@ public class MainActivity extends ActionBarActivity implements FragmentManager.O
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
-        //Log.i(MainActivity.TAG, "MainActivity onNewIntent");
+        Log.i(MainActivity.TAG, "MainActivity onNewIntent");
         setIntent(intent);
         handleIntent(intent);
     }
 
     void handleIntent(Intent intent) {
-        //Log.i(MainActivity.TAG, "MainActivity handleIntent");
+        Log.i(MainActivity.TAG, "MainActivity handleIntent");
         if(Intent.ACTION_SEARCH.equals(intent.getAction())) {
             String query = intent.getStringExtra(SearchManager.QUERY);
             final Intent searchIntent = new Intent(getApplicationContext(), SearchActivity.class);
@@ -175,5 +175,13 @@ public class MainActivity extends ActionBarActivity implements FragmentManager.O
         if(backStackEntryCountNil) {
             updateTitle();
         }
+    }
+
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putCharSequence("title", getTitle());
+        Log.i(MainActivity.TAG, "title saved: " + getTitle());
     }
 }
