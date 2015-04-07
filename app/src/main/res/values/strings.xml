@@ -3,16 +3,17 @@
     <string name="app_name">App</string>
     <string name="drawer_opened">Drawer opened</string>
     <string name="drawer_closed">Drawer closed</string>
-    <string name="search_hint">Add new schedule</string>
-    <string name="search_label">Searchable</string>
+
     <string name="main_fragment">Home</string>
     <string name="manage_schedules">Manage schedules</string>
     <string name="settings_fragment">Settings</string>
-    <string name="volley_error">Failed to fetch data. Internet connection?</string>
 
     <string-array name="drawer_items" >
         <item>@string/manage_schedules</item>
         <item>@string/settings_fragment</item>
     </string-array>
+
+    <string name="search_hint">Add new schedule</string>
+    <string name="volley_error">Failed to fetch data. Internet connection?</string>
 
 </resources>

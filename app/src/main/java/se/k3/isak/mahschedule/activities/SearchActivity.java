@@ -23,7 +23,7 @@ import se.k3.isak.mahschedule.volley.VolleyInterface;
 /**
  * Created by isak on 2015-04-05.
  */
-public class SearchableActivity extends Activity implements ListView.OnItemClickListener {
+public class SearchActivity extends Activity implements ListView.OnItemClickListener {
 
     VolleyInstance volleyInstance;
     ListView responseList;
@@ -42,6 +42,7 @@ public class SearchableActivity extends Activity implements ListView.OnItemClick
 
         setupVolley();
         handleIntent(getIntent());
+        Log.i(MainActivity.TAG, "SearchableActivity onCreate");
     }
 
     void setupVolley() {
@@ -49,14 +50,14 @@ public class SearchableActivity extends Activity implements ListView.OnItemClick
             @Override
             public void onVolleyJsonArrayRequestResponse(ArrayList<String> results) {
                 for(String s : results) {
-                    SearchableActivity.this.results.add(s);
+                    SearchActivity.this.results.add(s);
                 }
                 adapter.notifyDataSetChanged();
             }
 
             @Override
             public void onVolleyJsonArrayRequestError(String errorMsg) {
-                Toast.makeText(SearchableActivity.this,
+                Toast.makeText(SearchActivity.this,
                         getResources().getString(R.string.volley_error),
                         Toast.LENGTH_LONG).show();
                 Log.i(MainActivity.TAG, errorMsg);
@@ -67,19 +68,22 @@ public class SearchableActivity extends Activity implements ListView.OnItemClick
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
+        Log.i(MainActivity.TAG, "SearchableActivity onNewIntent");
         setIntent(intent);
         handleIntent(intent);
     }
 
     void handleIntent(Intent intent) {
-        if(Intent.ACTION_SEARCH.equals(intent.getAction())) {
-            String query = intent.getStringExtra(SearchManager.QUERY);
-            volleyInstance.newJsonArrayRequest(query);
-        }
+        String query = intent.getStringExtra(SearchManager.QUERY);
+        Log.i(MainActivity.TAG, query);
+        volleyInstance.newJsonArrayRequest(query);
     }
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        Log.i(MainActivity.TAG, "searchableACtivity onItemClick, pos: " + String.valueOf(position));
+        Intent result = new Intent();
+        result.putExtra("RESULT", results.get(position));
+        setResult(RESULT_OK, result);
+        finish();
     }
 }

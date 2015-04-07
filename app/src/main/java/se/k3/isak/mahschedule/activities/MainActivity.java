@@ -3,6 +3,7 @@ package se.k3.isak.mahschedule.activities;
 import android.app.FragmentManager;
 import android.app.SearchManager;
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.PersistableBundle;
@@ -23,6 +24,7 @@ import se.k3.isak.mahschedule.navigation_drawer.NavDrawer;
 public class MainActivity extends ActionBarActivity implements FragmentManager.OnBackStackChangedListener {
 
     public static final String TAG = "ISAK";
+    public static final int SEARCH_REQUEST_CODE = 42;
 
     String mMainFragmentTag;
     FragmentHelper mFragmentHelper;
@@ -48,6 +50,38 @@ public class MainActivity extends ActionBarActivity implements FragmentManager.O
 
         if(savedInstanceState == null) {
             mFragmentHelper.addFragment(new MainFragment(), mMainFragmentTag, false);
+        }
+
+        handleIntent(getIntent());
+        Log.i(MainActivity.TAG, "MainActivity onCreate");
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        Log.i(MainActivity.TAG, "MainActivity onNewIntent");
+        setIntent(intent);
+        handleIntent(intent);
+    }
+
+    void handleIntent(Intent intent) {
+        Log.i(MainActivity.TAG, "MainActivity handleIntent");
+        if(Intent.ACTION_SEARCH.equals(intent.getAction())) {
+            String query = intent.getStringExtra(SearchManager.QUERY);
+            final Intent searchIntent = new Intent(getApplicationContext(), SearchActivity.class);
+            searchIntent.putExtra(SearchManager.QUERY, query);
+            startActivityForResult(searchIntent, SEARCH_REQUEST_CODE);
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        Log.i(MainActivity.TAG, "MainActivity onActivityResult");
+        if(requestCode == SEARCH_REQUEST_CODE) {
+            if(resultCode == RESULT_OK) {
+                Log.i(MainActivity.TAG, data.getStringExtra("RESULT"));
+            }
         }
     }
 
