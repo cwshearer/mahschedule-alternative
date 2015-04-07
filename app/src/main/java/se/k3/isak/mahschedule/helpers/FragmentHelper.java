@@ -12,16 +12,16 @@ import se.k3.isak.mahschedule.R;
  */
 public class FragmentHelper {
 
-    Activity activity;
-    FragmentManager fragmentManager;
+    Activity mActivity;
+    public FragmentManager fragmentManager;
 
-    public FragmentHelper(Activity activity) {
-        this.activity = activity;
-        this.fragmentManager = activity.getFragmentManager();
+    private FragmentHelper(Builder builder) {
+        this.mActivity = builder.mActivity;
+        this.fragmentManager = builder.mFragmentManager;
     }
 
     public void addFragment(Fragment fragment, String tag, boolean isAddToBackStack) {
-        FragmentTransaction fragmentTransaction = activity.getFragmentManager().beginTransaction();
+        FragmentTransaction fragmentTransaction = mActivity.getFragmentManager().beginTransaction();
         fragmentTransaction.add(R.id.content_frame, fragment, tag);
         if(isAddToBackStack) {
             fragmentTransaction.addToBackStack(null);
@@ -46,7 +46,19 @@ public class FragmentHelper {
         return false;
     }
 
-    public FragmentManager getFragmentManager() {
-        return this.fragmentManager;
+    public static class Builder {
+
+        private final Activity mActivity;
+        private final FragmentManager mFragmentManager;
+
+        public Builder(Activity mActivity, FragmentManager mFragmentManager) {
+            this.mActivity = mActivity;
+            this.mFragmentManager = mFragmentManager;
+        }
+
+        public FragmentHelper build() {
+            return new FragmentHelper(this);
+        }
+
     }
 }

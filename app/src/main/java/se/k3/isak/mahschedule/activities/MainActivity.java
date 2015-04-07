@@ -2,7 +2,6 @@ package se.k3.isak.mahschedule.activities;
 
 import android.app.FragmentManager;
 import android.app.SearchManager;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.os.Bundle;
@@ -11,10 +10,8 @@ import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 
 import se.k3.isak.mahschedule.R;
 import se.k3.isak.mahschedule.fragments.MainFragment;
@@ -23,9 +20,9 @@ import se.k3.isak.mahschedule.navigation_drawer.NavDrawer;
 
 public class MainActivity extends ActionBarActivity implements FragmentManager.OnBackStackChangedListener {
 
-    public static final String TAG = "isak";
+    public static final String TAG = "ISAK";
 
-    FragmentHelper fragmentHelper;
+    FragmentHelper mFragmentHelper;
     NavDrawer navDrawer;
     Toolbar toolbar;
 
@@ -33,36 +30,34 @@ public class MainActivity extends ActionBarActivity implements FragmentManager.O
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        fragmentHelper = new FragmentHelper(this);
-        fragmentHelper.getFragmentManager().addOnBackStackChangedListener(this);
-
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        navDrawer = new NavDrawer(this, fragmentHelper, toolbar);
+        mFragmentHelper = new FragmentHelper.Builder(this, getFragmentManager()).build();
+        mFragmentHelper.fragmentManager.addOnBackStackChangedListener(this);
+
+        navDrawer = new NavDrawer.Builder(this, mFragmentHelper)
+                .drawerItems(getResources().getStringArray(R.array.drawer_items)).build();
 
         if(savedInstanceState == null) {
-            fragmentHelper.addFragment(new MainFragment(), "main", false);
+            mFragmentHelper.addFragment(new MainFragment(), "main", false);
         }
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if(navDrawer.getDrawerToggle().onOptionsItemSelected(item)) {
+        if(navDrawer.drawerToggle.onOptionsItemSelected(item)) {
             return true;
         }
-
-        if(fragmentHelper.getFragmentManager().getBackStackEntryCount() != 0) {
+        if(mFragmentHelper.fragmentManager.getBackStackEntryCount() != 0) {
             onBackPressed();
         }
-
         return super.onOptionsItemSelected(item);
     }
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
-        menu.findItem(R.id.search).setVisible(fragmentHelper.isFragmentVisible("Manage schedules"));
+        menu.findItem(R.id.search).setVisible(mFragmentHelper.isFragmentVisible("Manage schedules"));
         return super.onPrepareOptionsMenu(menu);
     }
 
@@ -72,10 +67,8 @@ public class MainActivity extends ActionBarActivity implements FragmentManager.O
 
         MenuItem searchItem = menu.findItem(R.id.search);
         SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
-
         SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
         searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
-
         return true;
     }
 
@@ -97,19 +90,18 @@ public class MainActivity extends ActionBarActivity implements FragmentManager.O
     @Override
     public void onPostCreate(Bundle savedInstanceState, PersistableBundle persistentState) {
         super.onPostCreate(savedInstanceState, persistentState);
-        navDrawer.getDrawerToggle().syncState();
+        navDrawer.drawerToggle.syncState();
     }
 
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
-        navDrawer.getDrawerToggle().onConfigurationChanged(newConfig);
+        navDrawer.drawerToggle.onConfigurationChanged(newConfig);
     }
 
     @Override
     public void onBackStackChanged() {
-        navDrawer.getDrawerToggle().setDrawerIndicatorEnabled(fragmentHelper.getFragmentManager().getBackStackEntryCount() == 0);
-        navDrawer.getDrawerToggle().syncState();
-        //Log.i(MainActivity.TAG, "onBackStackChanged");
+        navDrawer.drawerToggle.setDrawerIndicatorEnabled(mFragmentHelper.fragmentManager.getBackStackEntryCount() == 0);
+        navDrawer.drawerToggle.syncState();
     }
 }
