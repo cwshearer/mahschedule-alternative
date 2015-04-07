@@ -53,36 +53,7 @@ public class MainActivity extends ActionBarActivity implements FragmentManager.O
         }
 
         handleIntent(getIntent());
-        Log.i(MainActivity.TAG, "MainActivity onCreate");
-    }
-
-    @Override
-    protected void onNewIntent(Intent intent) {
-        super.onNewIntent(intent);
-        Log.i(MainActivity.TAG, "MainActivity onNewIntent");
-        setIntent(intent);
-        handleIntent(intent);
-    }
-
-    void handleIntent(Intent intent) {
-        Log.i(MainActivity.TAG, "MainActivity handleIntent");
-        if(Intent.ACTION_SEARCH.equals(intent.getAction())) {
-            String query = intent.getStringExtra(SearchManager.QUERY);
-            final Intent searchIntent = new Intent(getApplicationContext(), SearchActivity.class);
-            searchIntent.putExtra(SearchManager.QUERY, query);
-            startActivityForResult(searchIntent, SEARCH_REQUEST_CODE);
-        }
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        Log.i(MainActivity.TAG, "MainActivity onActivityResult");
-        if(requestCode == SEARCH_REQUEST_CODE) {
-            if(resultCode == RESULT_OK) {
-                Log.i(MainActivity.TAG, data.getStringExtra("RESULT"));
-            }
-        }
+        //Log.i(MainActivity.TAG, "MainActivity onCreate");
     }
 
     void setupNavDrawer() {
@@ -99,6 +70,46 @@ public class MainActivity extends ActionBarActivity implements FragmentManager.O
                     }
                 },
                 getSupportActionBar());
+    }
+
+    void updateTitle() {
+        for(String s : mDrawerTitles) {
+            if(mFragmentHelper.isFragmentVisible(s)) {
+                setTitle(s);
+            }
+        }
+        if(mFragmentHelper.isFragmentVisible(mMainFragmentTag)) {
+            setTitle(mMainFragmentTag);
+        }
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        //Log.i(MainActivity.TAG, "MainActivity onNewIntent");
+        setIntent(intent);
+        handleIntent(intent);
+    }
+
+    void handleIntent(Intent intent) {
+        //Log.i(MainActivity.TAG, "MainActivity handleIntent");
+        if(Intent.ACTION_SEARCH.equals(intent.getAction())) {
+            String query = intent.getStringExtra(SearchManager.QUERY);
+            final Intent searchIntent = new Intent(getApplicationContext(), SearchActivity.class);
+            searchIntent.putExtra(SearchManager.QUERY, query);
+            startActivityForResult(searchIntent, SEARCH_REQUEST_CODE);
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        //Log.i(MainActivity.TAG, "MainActivity onActivityResult");
+        if(requestCode == SEARCH_REQUEST_CODE) {
+            if(resultCode == RESULT_OK) {
+                Log.i(MainActivity.TAG, data.getStringExtra("RESULT"));
+            }
+        }
     }
 
     @Override
@@ -163,17 +174,6 @@ public class MainActivity extends ActionBarActivity implements FragmentManager.O
         navDrawer.drawerToggle.syncState();
         if(backStackEntryCountNil) {
             updateTitle();
-        }
-    }
-
-    void updateTitle() {
-        for(String s : mDrawerTitles) {
-            if(mFragmentHelper.isFragmentVisible(s)) {
-                setTitle(s);
-            }
-        }
-        if(mFragmentHelper.isFragmentVisible(mMainFragmentTag)) {
-            setTitle(mMainFragmentTag);
         }
     }
 }

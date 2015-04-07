@@ -13,6 +13,7 @@ import android.widget.Toast;
 import com.android.volley.toolbox.Volley;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 import se.k3.isak.mahschedule.R;
 import se.k3.isak.mahschedule.helpers.Constants;
@@ -42,16 +43,18 @@ public class SearchActivity extends Activity implements ListView.OnItemClickList
 
         setupVolley();
         handleIntent(getIntent());
-        Log.i(MainActivity.TAG, "SearchableActivity onCreate");
+        //Log.i(MainActivity.TAG, "SearchableActivity onCreate");
     }
 
     void setupVolley() {
-        volleyInstance = new VolleyInstance(Constants.KRONOX_URL, Volley.newRequestQueue(this), new VolleyInterface() {
+        volleyInstance = new VolleyInstance(Volley.newRequestQueue(this), new VolleyInterface() {
             @Override
             public void onVolleyJsonArrayRequestResponse(ArrayList<String> results) {
+                Log.i(MainActivity.TAG, "onVolleyResponse: " + String.valueOf(results.size()));
                 for(String s : results) {
                     SearchActivity.this.results.add(s);
                 }
+                Collections.sort(results, String.CASE_INSENSITIVE_ORDER);
                 adapter.notifyDataSetChanged();
             }
 
@@ -60,7 +63,7 @@ public class SearchActivity extends Activity implements ListView.OnItemClickList
                 Toast.makeText(SearchActivity.this,
                         getResources().getString(R.string.volley_error),
                         Toast.LENGTH_LONG).show();
-                Log.i(MainActivity.TAG, errorMsg);
+                //Log.i(MainActivity.TAG, errorMsg);
             }
         });
     }
@@ -68,15 +71,15 @@ public class SearchActivity extends Activity implements ListView.OnItemClickList
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
-        Log.i(MainActivity.TAG, "SearchableActivity onNewIntent");
+        //Log.i(MainActivity.TAG, "SearchableActivity onNewIntent");
         setIntent(intent);
         handleIntent(intent);
     }
 
     void handleIntent(Intent intent) {
         String query = intent.getStringExtra(SearchManager.QUERY);
-        Log.i(MainActivity.TAG, query);
-        volleyInstance.newJsonArrayRequest(query);
+        volleyInstance.newJsonArrayRequest(Constants.KRONOX_URL_PROGRAM, query);
+        volleyInstance.newJsonArrayRequest(Constants.KRONOX_URL_COURSE, query);
     }
 
     @Override

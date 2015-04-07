@@ -19,7 +19,7 @@ public class Cleaner {
 
         if(start1 == -1 || end1 == -1 || start2 == -1 || end2 == -1) {
             Log.i(MainActivity.TAG, "invalid schedule item from kronox");
-            return null;
+            return "invalid";
         }
 
         String part1 = s.substring(start1 + 3, end1);

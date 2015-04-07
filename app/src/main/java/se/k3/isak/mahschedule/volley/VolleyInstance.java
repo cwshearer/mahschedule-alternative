@@ -20,18 +20,16 @@ import se.k3.isak.mahschedule.helpers.Cleaner;
  */
 public class VolleyInstance {
 
-    String mBaseUrl;
     RequestQueue mRequestQueue;
     VolleyInterface mVolleyInterface;
 
-    public VolleyInstance(String baseUrl, RequestQueue requestQueue, VolleyInterface volleyInterface) {
-        this.mBaseUrl = baseUrl;
+    public VolleyInstance(RequestQueue requestQueue, VolleyInterface volleyInterface) {
         this.mRequestQueue = requestQueue;
         this.mVolleyInterface = volleyInterface;
     }
 
-    public void newJsonArrayRequest(String query) {
-        String url = mBaseUrl + query;
+    public void newJsonArrayRequest(String baseUrl, String query) {
+        String url = baseUrl + query;
         final ArrayList<String> results = new ArrayList<>();
 
         JsonArrayRequest jsonOArrayRequest = new JsonArrayRequest(url, new Response.Listener<JSONArray>() {
@@ -39,7 +37,10 @@ public class VolleyInstance {
             public void onResponse(JSONArray response) {
                 for(int i = 0; i < response.length(); i++) {
                     try {
-                        results.add(Cleaner.cleanKronoxResponse(response.get(i).toString()));
+                        String resultString = Cleaner.cleanKronoxResponse(response.get(i).toString());
+                        if(!resultString.equals("invalid")) {
+                            results.add(resultString);
+                        }
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
