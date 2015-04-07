@@ -26,21 +26,20 @@ public class NavDrawer implements ListView.OnItemClickListener {
     FragmentHelper mFragmentHelper;
     String[] mDrawerItems;
     DrawerOpenListener mDrawerOpenListener;
+    ActionBar mActionBar;
 
     ValueAnimator mAnim;
-    ActionBar mActionBar;
     ListView mDrawerList;
     DrawerLayout mDrawerLayout;
 
     public ActionBarDrawerToggle drawerToggle;
 
-    public NavDrawer(Builder builder) {
-        this.mActivity = builder.mActivity;
-        this.mFragmentHelper =  builder.mFragmentHelper;
-        this.mDrawerItems = builder.mDrawerItems;
-        this.mDrawerOpenListener = builder.mDrawerOpenListener;
-
-        mActionBar = ((ActionBarActivity)mActivity).getSupportActionBar();
+    public NavDrawer(Activity activity, FragmentHelper fragmentHelper, String[] drawerItems, DrawerOpenListener drawerOpenListener, ActionBar actionBar) {
+        this.mActivity = activity;
+        this.mFragmentHelper =  fragmentHelper;
+        this.mDrawerItems = drawerItems;
+        this.mDrawerOpenListener = drawerOpenListener;
+        this.mActionBar = actionBar;
         setupDrawerToggle();
         setupAnim();
     }
@@ -48,7 +47,7 @@ public class NavDrawer implements ListView.OnItemClickListener {
     private void setupDrawerToggle() {
         mDrawerLayout = (DrawerLayout) mActivity.findViewById(R.id.drawer_layout);
         mDrawerList = (ListView) mActivity.findViewById(R.id.drawer_list);
-        mDrawerList.setAdapter(new ArrayAdapter<String>(mActivity, R.layout.drawer_list_item, mDrawerItems));
+        mDrawerList.setAdapter(new ArrayAdapter<>(mActivity, R.layout.drawer_list_item, mDrawerItems));
         mDrawerList.setOnItemClickListener(this);
 
         drawerToggle = (new ActionBarDrawerToggle(mActivity, mDrawerLayout, R.string.drawer_opened, R.string.drawer_closed) {
@@ -111,29 +110,4 @@ public class NavDrawer implements ListView.OnItemClickListener {
     public void animStart() {
         mAnim.start();
     }
-
-    public static class Builder {
-
-        private final Activity mActivity;
-        private final FragmentHelper mFragmentHelper;
-        private final DrawerOpenListener mDrawerOpenListener;
-
-        private String[] mDrawerItems;
-
-        public Builder(Activity mActivity, FragmentHelper mFragmentHelper, DrawerOpenListener mDrawerOpenListener) {
-            this.mActivity = mActivity;
-            this.mFragmentHelper = mFragmentHelper;
-            this.mDrawerOpenListener = mDrawerOpenListener;
-        }
-
-        public Builder drawerItems(String[] mDrawerItems) {
-            this.mDrawerItems = mDrawerItems;
-            return this;
-        }
-
-        public NavDrawer build() {
-            return new NavDrawer(this);
-        }
-    }
-
 }

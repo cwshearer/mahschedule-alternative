@@ -15,9 +15,9 @@ public class FragmentHelper {
     Activity mActivity;
     public FragmentManager fragmentManager;
 
-    private FragmentHelper(Builder builder) {
-        this.mActivity = builder.mActivity;
-        this.fragmentManager = builder.mFragmentManager;
+    public FragmentHelper(Activity activity, FragmentManager fragmentManager) {
+        this.mActivity = activity;
+        this.fragmentManager = fragmentManager;
     }
 
     public void addFragment(Fragment fragment, String tag, boolean isAddToBackStack) {
@@ -40,25 +40,6 @@ public class FragmentHelper {
 
     public boolean isFragmentVisible(String tag) {
         Fragment test = fragmentManager.findFragmentByTag(tag);
-        if(test != null && test.isVisible()) {
-            return true;
-        }
-        return false;
-    }
-
-    public static class Builder {
-
-        private final Activity mActivity;
-        private final FragmentManager mFragmentManager;
-
-        public Builder(Activity mActivity, FragmentManager mFragmentManager) {
-            this.mActivity = mActivity;
-            this.mFragmentManager = mFragmentManager;
-        }
-
-        public FragmentHelper build() {
-            return new FragmentHelper(this);
-        }
-
+        return test != null && test.isVisible();
     }
 }

@@ -1,8 +1,8 @@
-package se.k3.isak.mahschedule.models;
+package se.k3.isak.mahschedule.presenter;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
-import android.text.Layout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,31 +18,29 @@ import se.k3.isak.mahschedule.R;
  */
 public class CustomBaseAdapter extends BaseAdapter {
 
-    Activity activity;
-    ArrayList<String> list;
-    private LayoutInflater layoutInflater;
+    ArrayList<String> mList;
+    LayoutInflater layoutInflater;
 
-    public CustomBaseAdapter(Activity activity, ArrayList<String> list) {
-        this.activity = activity;
-        this.list = list;
-        this.layoutInflater = (LayoutInflater) activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+    public CustomBaseAdapter(Activity mActivity, ArrayList<String> mList) {
+        this.mList = mList;
+        this.layoutInflater = (LayoutInflater) mActivity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 
     class ViewHolder {
-        public TextView textItem;
+        public TextView mTextItem;
         public ViewHolder(View base) {
-           textItem = (TextView) base.findViewById(R.id.search_list_item);
+           mTextItem = (TextView) base.findViewById(R.id.search_list_item);
         }
     }
 
     @Override
     public int getCount() {
-        return list.size();
+        return mList.size();
     }
 
     @Override
     public Object getItem(int position) {
-        return list.get(position);
+        return mList.get(position);
     }
 
     @Override
@@ -50,6 +48,7 @@ public class CustomBaseAdapter extends BaseAdapter {
         return position;
     }
 
+    @SuppressLint("InflateParams")
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         View v = convertView;
@@ -61,7 +60,7 @@ public class CustomBaseAdapter extends BaseAdapter {
         } else {
             holder = (ViewHolder) v.getTag();
         }
-        holder.textItem.setText(list.get(position));
+        holder.mTextItem.setText(mList.get(position));
         return v;
     }
 }

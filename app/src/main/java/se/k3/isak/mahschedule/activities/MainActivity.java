@@ -20,7 +20,7 @@ import se.k3.isak.mahschedule.helpers.FragmentHelper;
 import se.k3.isak.mahschedule.navigation_drawer.DrawerOpenListener;
 import se.k3.isak.mahschedule.navigation_drawer.NavDrawer;
 
-public class MainActivity extends ActionBarActivity implements FragmentManager.OnBackStackChangedListener, DrawerOpenListener {
+public class MainActivity extends ActionBarActivity implements FragmentManager.OnBackStackChangedListener {
 
     public static final String TAG = "ISAK";
 
@@ -41,16 +41,30 @@ public class MainActivity extends ActionBarActivity implements FragmentManager.O
         mMainFragmentTag = getResources().getString(R.string.main_fragment);
         setTitle(mMainFragmentTag);
 
-        mFragmentHelper = new FragmentHelper.Builder(this, getFragmentManager()).build();
+        mFragmentHelper = new FragmentHelper(this, getFragmentManager());
         mFragmentHelper.fragmentManager.addOnBackStackChangedListener(this);
 
-        mDrawerTitles = getResources().getStringArray(R.array.drawer_items);
-        navDrawer = new NavDrawer.Builder(this, mFragmentHelper, this)
-                .drawerItems(mDrawerTitles).build();
+        setupNavDrawer();
 
         if(savedInstanceState == null) {
             mFragmentHelper.addFragment(new MainFragment(), mMainFragmentTag, false);
         }
+    }
+
+    void setupNavDrawer() {
+        mDrawerTitles = getResources().getStringArray(R.array.drawer_items);
+        navDrawer = new NavDrawer(
+                this,
+                mFragmentHelper,
+                mDrawerTitles,
+                new DrawerOpenListener() {
+                    @Override
+                    public boolean isDrawerOpened(boolean isOpen) {
+                        updateTitle();
+                        return mIsDrawerOpen = isOpen;
+                    }
+                },
+                getSupportActionBar());
     }
 
     @Override
@@ -116,12 +130,6 @@ public class MainActivity extends ActionBarActivity implements FragmentManager.O
         if(backStackEntryCountNil) {
             updateTitle();
         }
-    }
-
-    @Override
-    public boolean isDrawerOpened(boolean isOpen) {
-        updateTitle();
-        return mIsDrawerOpen = isOpen;
     }
 
     void updateTitle() {

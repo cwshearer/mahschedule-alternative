@@ -7,34 +7,28 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.Toast;
 
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.Volley;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.util.ArrayList;
 
 import se.k3.isak.mahschedule.R;
-import se.k3.isak.mahschedule.helpers.Cleaner;
 import se.k3.isak.mahschedule.helpers.Constants;
-import se.k3.isak.mahschedule.models.CustomBaseAdapter;
+import se.k3.isak.mahschedule.presenter.CustomBaseAdapter;
+import se.k3.isak.mahschedule.volley.VolleyInstance;
+import se.k3.isak.mahschedule.volley.VolleyInterface;
 
 /**
  * Created by isak on 2015-04-05.
  */
 public class SearchableActivity extends Activity implements ListView.OnItemClickListener {
 
+    VolleyInstance volleyInstance;
     ListView responseList;
+    ArrayList<String> results = new ArrayList<>();
     CustomBaseAdapter adapter;
-    ArrayList<String> results = new ArrayList<String>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,7 +40,28 @@ public class SearchableActivity extends Activity implements ListView.OnItemClick
         responseList.setAdapter(adapter);
         responseList.setOnItemClickListener(this);
 
+        setupVolley();
         handleIntent(getIntent());
+    }
+
+    void setupVolley() {
+        volleyInstance = new VolleyInstance(Constants.KRONOX_URL, Volley.newRequestQueue(this), new VolleyInterface() {
+            @Override
+            public void onVolleyJsonArrayRequestResponse(ArrayList<String> results) {
+                for(String s : results) {
+                    SearchableActivity.this.results.add(s);
+                }
+                adapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onVolleyJsonArrayRequestError(String errorMsg) {
+                Toast.makeText(SearchableActivity.this,
+                        getResources().getString(R.string.volley_error),
+                        Toast.LENGTH_LONG).show();
+                Log.i(MainActivity.TAG, errorMsg);
+            }
+        });
     }
 
     @Override
@@ -57,40 +72,14 @@ public class SearchableActivity extends Activity implements ListView.OnItemClick
     }
 
     void handleIntent(Intent intent) {
-        Log.i(MainActivity.TAG, "handle search intent");
         if(Intent.ACTION_SEARCH.equals(intent.getAction())) {
             String query = intent.getStringExtra(SearchManager.QUERY);
-            getFromKronoxAndShow(query);
+            volleyInstance.newJsonArrayRequest(query);
         }
-    }
-
-    void getFromKronoxAndShow(String query) {
-        String url = Constants.KRONOX_URL + query;
-        RequestQueue requestQueue = Volley.newRequestQueue(this);
-
-        JsonArrayRequest jsonOArrayRequest = new JsonArrayRequest(url, new Response.Listener<JSONArray>() {
-            @Override
-            public void onResponse(JSONArray response) {
-                for(int i = 0; i < response.length(); i++) {
-                    try {
-                        results.add(Cleaner.cleanKronoxResponse(response.get(i).toString()));
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                }
-                adapter.notifyDataSetChanged();
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Log.i(MainActivity.TAG, error.toString());
-            }
-        });
-        requestQueue.add(jsonOArrayRequest);
     }
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        Log.i(MainActivity.TAG, "click on position: " + String.valueOf(position));
+        Log.i(MainActivity.TAG, "searchableACtivity onItemClick, pos: " + String.valueOf(position));
     }
 }

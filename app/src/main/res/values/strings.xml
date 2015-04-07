@@ -8,6 +8,7 @@
     <string name="main_fragment">Home</string>
     <string name="manage_schedules">Manage schedules</string>
     <string name="settings_fragment">Settings</string>
+    <string name="volley_error">Failed to fetch data. Internet connection?</string>
 
     <string-array name="drawer_items" >
         <item>@string/manage_schedules</item>
