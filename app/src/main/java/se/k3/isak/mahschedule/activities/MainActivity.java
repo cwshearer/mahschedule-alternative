@@ -112,7 +112,7 @@ public class MainActivity extends ActionBarActivity {
         Log.i(MainActivity.TAG, "MainActivity onNewIntent");
         setIntent(intent);
         handleIntent(intent);
-    }
+    } 
 
     void handleIntent(Intent intent) {
         Log.i(MainActivity.TAG, "MainActivity handleIntent");
