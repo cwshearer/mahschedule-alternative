@@ -38,7 +38,7 @@ public class FragmentHelper {
         fragmentTransaction.commit();
     }
 
-    public boolean isFragmentVisible(String tag) {
+    public boolean findVisibleFragment(String tag) {
         Fragment test = fragmentManager.findFragmentByTag(tag);
         return test != null && test.isVisible();
     }

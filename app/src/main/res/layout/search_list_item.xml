@@ -8,6 +8,7 @@
         android:layout_width="match_parent" android:layout_height="match_parent"
         android:padding="16dp"
         android:hint="item"
+        android:clickable="false"
         android:textColor="@android:color/primary_text_light" />
 
 </LinearLayout>

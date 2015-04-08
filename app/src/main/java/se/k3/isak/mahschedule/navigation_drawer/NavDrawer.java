@@ -4,7 +4,6 @@ import android.animation.ValueAnimator;
 import android.app.Activity;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.view.View;
 import android.view.animation.DecelerateInterpolator;
@@ -12,7 +11,9 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
-import se.k3.isak.mahschedule.fragments.ScheduleSettings;
+import butterknife.ButterKnife;
+import butterknife.InjectView;
+import se.k3.isak.mahschedule.schedule_settings.ScheduleSettings;
 import se.k3.isak.mahschedule.fragments.SettingsFragment;
 import se.k3.isak.mahschedule.helpers.FragmentHelper;
 import se.k3.isak.mahschedule.R;
@@ -29,8 +30,9 @@ public class NavDrawer implements ListView.OnItemClickListener {
     ActionBar mActionBar;
 
     ValueAnimator mAnim;
-    ListView mDrawerList;
-    DrawerLayout mDrawerLayout;
+
+    @InjectView(R.id.drawer_list) ListView mDrawerList;
+    @InjectView(R.id.drawer_layout) DrawerLayout mDrawerLayout;
 
     public ActionBarDrawerToggle drawerToggle;
 
@@ -45,8 +47,7 @@ public class NavDrawer implements ListView.OnItemClickListener {
     }
 
     private void setupDrawerToggle() {
-        mDrawerLayout = (DrawerLayout) mActivity.findViewById(R.id.drawer_layout);
-        mDrawerList = (ListView) mActivity.findViewById(R.id.drawer_list);
+        ButterKnife.inject(this, mActivity);
         mDrawerList.setAdapter(new ArrayAdapter<>(mActivity, R.layout.drawer_list_item, mDrawerItems));
         mDrawerList.setOnItemClickListener(this);
 

@@ -28,7 +28,7 @@ public class VolleyInstance {
         this.mVolleyInterface = volleyInterface;
     }
 
-    public void newJsonArrayRequest(String baseUrl, String query) {
+    public void newJsonArrayRequest(final String baseUrl, String query) {
         String url = baseUrl + query;
         final ArrayList<String> results = new ArrayList<>();
 
@@ -45,7 +45,7 @@ public class VolleyInstance {
                         e.printStackTrace();
                     }
                 }
-                mVolleyInterface.onVolleyJsonArrayRequestResponse(results);
+                mVolleyInterface.onVolleyJsonArrayRequestResponse(results, baseUrl);
             }
         }, new Response.ErrorListener() {
             @Override
